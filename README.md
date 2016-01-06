@@ -2,6 +2,7 @@
 An editor for Markdown files to edit and parse to HTML files.
 
 # Needed for this Application
+## MarkdownSharp
 In order to develop with this application you will need to install MarkdownSharp on NuGet: https://www.nuget.org/packages/MarkdownSharp/
 
 # Visual Studio and .NET Requirements
