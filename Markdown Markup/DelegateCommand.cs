@@ -17,20 +17,8 @@ namespace Markdown_Markup
             _canExecute = canExecute;
             _execute = execute;
         }
-
-        private bool _canExecuteState;
-        public bool CanExecute(object parameter)
-        {
-            var previousState = _canExecuteState;
-            _canExecuteState = _canExecute == null || _canExecute.Invoke(parameter);
-
-            if (previousState != _canExecuteState)
-            {
-                //OnCanExecuteChanged();
-            }
-
-            return _canExecuteState;
-        }
+        
+        public bool CanExecute(object parameter) => _canExecute == null || _canExecute.Invoke(parameter);
 
         public void Execute(object parameter)
         {
@@ -41,13 +29,6 @@ namespace Markdown_Markup
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        //public event EventHandler CanExecuteChanged;
-        //protected void OnCanExecuteChanged()
-        //{
-        //    var handler = CanExecuteChanged;
-        //    handler?.Invoke(this, EventArgs.Empty);
-        //}        
+        }      
     }
 }
