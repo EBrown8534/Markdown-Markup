@@ -23,10 +23,7 @@ namespace Markdown_Markup
                 new FrameworkPropertyMetadata(OnHtmlChanged));
 
         [AttachedPropertyBrowsableForType(typeof(WebBrowser))]
-        public static string GetHtml(WebBrowser d)
-        {
-            return (string)d.GetValue(HtmlProperty);
-        }
+        public static string GetHtml(WebBrowser d) => (string)d.GetValue(HtmlProperty);
 
         public static void SetHtml(WebBrowser d, string value)
         {
@@ -35,7 +32,7 @@ namespace Markdown_Markup
 
         static void OnHtmlChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            WebBrowser webBrowser = dependencyObject as WebBrowser;
+            var webBrowser = dependencyObject as WebBrowser;
             webBrowser?.NavigateToString(e.NewValue as string ?? "&nbsp;");
         }
     }

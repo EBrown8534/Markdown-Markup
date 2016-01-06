@@ -27,10 +27,7 @@ namespace Markdown_Markup
             DataContext = new MainWindowViewModel();
         }
 
-        private MainWindowViewModel ViewModel
-        {
-            get { return DataContext as MainWindowViewModel; }
-        }
+        private MainWindowViewModel ViewModel => DataContext as MainWindowViewModel; 
 
         private void renderPreviewBrowser_Navigating(object sender, NavigatingCancelEventArgs e)
         {
