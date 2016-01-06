@@ -8,6 +8,12 @@ using System.Windows.Controls;
 
 namespace Markdown_Markup
 {
+    /// <summary>
+    /// Represents a behavior to control WebBrowser binding to an HTML string.
+    /// </summary>
+    /// <remarks>
+    /// Adopted from: http://stackoverflow.com/a/4204350/4564272
+    /// </remarks>
     public class BrowserBehavior
     {
         public static readonly DependencyProperty HtmlProperty = DependencyProperty.RegisterAttached(
