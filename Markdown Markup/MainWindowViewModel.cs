@@ -102,7 +102,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Save the Markdown file
                 using (var sw = new StreamWriter(dialog.FileName))
                 {
                     sw.WriteLine(MarkdownContent);
@@ -121,7 +120,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Save the Markdown file
                 using (var sw = new StreamWriter(dialog.FileName))
                 {
                     sw.WriteLine(CssContent);
@@ -140,7 +138,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Save the Markdown file
                 using (var sw = new StreamWriter(dialog.FileName))
                 {
                     sw.WriteLine(HtmlContent);
@@ -159,7 +156,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Save the Markdown file
                 using (var sw = new StreamWriter(dialog.FileName))
                 {
                     sw.WriteLine(HtmlRenderContent);
@@ -178,7 +174,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Open the Markdown file
                 using (var sr = new StreamReader(dialog.FileName))
                 {
                     MarkdownContent = sr.ReadToEnd();
@@ -197,7 +192,6 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                // Open the Markdown file
                 using (var sr = new StreamReader(dialog.FileName))
                 {
                     CssContent = sr.ReadToEnd();
