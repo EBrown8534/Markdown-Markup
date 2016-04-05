@@ -36,10 +36,10 @@
             <StackPanel></StackPanel>
         </DockPanel>
         <StatusBar Height="24" VerticalAlignment="Bottom" Grid.ColumnSpan="3" Grid.Row="2"/>
-        <TextBox Margin="5,45,5,29" TextWrapping="Wrap" Grid.RowSpan="3" Text="{Binding MarkdownContent, UpdateSourceTrigger=PropertyChanged}"  AcceptsReturn="True" AcceptsTab="True"/>
-        <TextBox Margin="5,28,5,5" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Text="{Binding HtmlContent}"/>
-        <TextBox Margin="5,26,5,29" TextWrapping="Wrap" Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding HtmlRenderContent}"/>
-        <TextBox Margin="5,45,5,0" TextWrapping="Wrap" Grid.Column="1" Text="{Binding CssContent, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True"/>
+        <TextBox Margin="5,45,5,29" TextWrapping="Wrap" Grid.RowSpan="3" Text="{Binding MarkdownContent, UpdateSourceTrigger=PropertyChanged}"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Margin="5,28,5,5" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Text="{Binding HtmlContent}" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Margin="5,26,5,29" TextWrapping="Wrap" Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding HtmlRenderContent}" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Margin="5,45,5,0" TextWrapping="Wrap" Grid.Column="1" Text="{Binding CssContent, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
         <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="2" Margin="5,45,5,29" Grid.RowSpan="3" Navigating="renderPreviewBrowser_Navigating" />
         <Label Content="Markdown Content:" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
         <Label Content="Additional CSS:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
