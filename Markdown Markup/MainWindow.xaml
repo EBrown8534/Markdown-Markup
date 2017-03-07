@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Markdown_Markup"
         mc:Ignorable="d"
-        Title="MainWindow" Height="539" Width="749"
+        Title="{Binding Title}" Height="539" Width="749"
         d:DataContext="{d:DesignInstance local:MainWindowViewModel}">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding SaveMarkdownCommand}" Key="{Binding SaveMarkdownCommand.Gesture.Key}" Modifiers="{Binding SaveMarkdownCommand.Gesture.Modifiers}" />
+        <KeyBinding Command="{Binding OpenMarkdownCommand}" Key="{Binding OpenMarkdownCommand.Gesture.Key}" Modifiers="{Binding OpenMarkdownCommand.Gesture.Modifiers}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -22,14 +26,17 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open">
-                        <MenuItem Header="_Markdown" Command="{Binding OpenMarkdownCommand}"/>
+                        <MenuItem Header="_Markdown" Command="{Binding OpenMarkdownCommand}" InputGestureText="{Binding OpenMarkdownCommand.GestureText}"/>
                         <MenuItem Header="_CSS" Command="{Binding OpenCssCommand}"/>
                     </MenuItem>
                     <MenuItem Header="_Save">
-                        <MenuItem Header="_Markdown" Command="{Binding SaveMarkdownCommand}" />
+                        <MenuItem Header="_Markdown" Command="{Binding SaveMarkdownCommand}" InputGestureText="{Binding SaveMarkdownCommand.GestureText}"/>
                         <MenuItem Header="_CSS" Command="{Binding SaveCssCommand}"/>
                         <MenuItem Header="_Generated HTML" Command="{Binding SaveGeneratedHtmlCommand}"/>
                         <MenuItem Header="_Rendered HTML" Command="{Binding SaveRenderedHtmlCommand}"/>
+                    </MenuItem>
+                    <MenuItem Header="Save _As">
+                        <MenuItem Header="_Markdown" Command="{Binding SaveAsMarkdownCommand}"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -37,14 +44,24 @@
         </DockPanel>
         <StatusBar Height="24" VerticalAlignment="Bottom" Grid.ColumnSpan="3" Grid.Row="2"/>
         <TextBox Margin="5,45,5,29" TextWrapping="Wrap" Grid.RowSpan="3" Text="{Binding MarkdownContent, UpdateSourceTrigger=PropertyChanged}"  AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
-        <TextBox Margin="5,28,5,5" TextWrapping="Wrap" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Text="{Binding HtmlContent}" VerticalScrollBarVisibility="Visible"/>
-        <TextBox Margin="5,26,5,29" TextWrapping="Wrap" Grid.Column="1" Grid.Row="2" IsReadOnly="True" Text="{Binding HtmlRenderContent}" VerticalScrollBarVisibility="Visible"/>
+        <TabControl Margin="5,19,5,0" Grid.Column="2" Grid.Row="0">
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Markdown HTML:" HorizontalAlignment="Left" Margin="5,2,0,0" VerticalAlignment="Top"/>
+                </TabItem.Header>
+                <TextBox TextWrapping="Wrap" IsReadOnly="True" Text="{Binding HtmlContent}" VerticalScrollBarVisibility="Visible"/>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    <Label Content="Render HTML:" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top"/>
+                </TabItem.Header>
+                <TextBox TextWrapping="Wrap" IsReadOnly="True" Text="{Binding HtmlRenderContent}" VerticalScrollBarVisibility="Visible"/>
+            </TabItem>
+        </TabControl>
         <TextBox Margin="5,45,5,0" TextWrapping="Wrap" Grid.Column="1" Text="{Binding CssContent, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
-        <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="2" Margin="5,45,5,29" Grid.RowSpan="3" Navigating="renderPreviewBrowser_Navigating" />
+        <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="1" Grid.Row="1" Margin="5,31,5,29" Grid.ColumnSpan="2" Grid.RowSpan="2" Navigating="renderPreviewBrowser_Navigating" />
         <Label Content="Markdown Content:" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
         <Label Content="Additional CSS:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
-        <Label Content="Markdown HTML:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,2,0,0" Grid.Row="1" VerticalAlignment="Top"/>
-        <Label Content="Render HTML:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="2" VerticalAlignment="Top"/>
-        <Label Content="HTML Preview:" Grid.Column="2" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
+        <Label Content="HTML Preview:" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

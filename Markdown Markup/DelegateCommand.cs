@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,16 @@ namespace Markdown_Markup
     {
         private readonly Predicate<object> _canExecute;
         private readonly Action<object> _execute;
+
+        public KeyGesture Gesture { get; set; }
+
+        public string GestureText
+        {
+            get
+            {
+                return Gesture?.GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
+            }
+        }
 
         public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null)
         {

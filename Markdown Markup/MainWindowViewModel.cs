@@ -20,23 +20,52 @@ namespace Markdown_Markup
         private string _htmlContent;
         private string _htmlRenderContent;
 
+        private string _markdownFile;
+        private bool _edited;
+
         public MainWindowViewModel()
         {
             _markdown = new Markdown();
-            SaveMarkdownCommand = new DelegateCommand(SaveMarkdown, CanSaveMarkdown);
+            SaveMarkdownCommand = new DelegateCommand(SaveMarkdown, CanSaveMarkdown) { Gesture = new KeyGesture(Key.S, ModifierKeys.Control) };
+            SaveAsMarkdownCommand = new DelegateCommand((object p) => SaveAsMarkdown(p), CanSaveMarkdown);
             SaveCssCommand = new DelegateCommand(SaveCss, CanSaveCss);
             SaveGeneratedHtmlCommand = new DelegateCommand(SaveGeneratedHtml, CanSaveGeneratedHtml);
             SaveRenderedHtmlCommand = new DelegateCommand(SaveRenderedHtml, CanSaveRenderedHtml);
-            OpenMarkdownCommand = new DelegateCommand(OpenMarkdown, CanOpenMarkdown);
+            OpenMarkdownCommand = new DelegateCommand(OpenMarkdown, CanOpenMarkdown) { Gesture = new KeyGesture(Key.O, ModifierKeys.Control) };
             OpenCssCommand = new DelegateCommand(OpenCss, CanOpenCss);
         }
-        
+
         public ICommand SaveMarkdownCommand { get; }
+        public ICommand SaveAsMarkdownCommand { get; }
         public ICommand SaveCssCommand { get; }
         public ICommand SaveGeneratedHtmlCommand { get; }
         public ICommand SaveRenderedHtmlCommand { get; }
         public ICommand OpenMarkdownCommand { get; }
         public ICommand OpenCssCommand { get; }
+
+        public string MarkdownFile
+        {
+            get { return _markdownFile; }
+            set
+            {
+                _markdownFile = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(MarkdownFile)));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Title)));
+            }
+        }
+
+        public bool Edited
+        {
+            get { return _edited; }
+            set
+            {
+                _edited = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Edited)));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Title)));
+            }
+        }
+
+        public string Title => "Markdown Markup" + (MarkdownFile?.Length > 0 ? " - " + MarkdownFile : "") + (Edited ? "*" : "");
 
         public string MarkdownContent
         {
@@ -44,6 +73,7 @@ namespace Markdown_Markup
             set
             {
                 _markdownContent = value;
+                Edited = true;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(MarkdownContent)));
                 UpdateHtml();
             }
@@ -93,7 +123,7 @@ namespace Markdown_Markup
 
         public bool CanSaveMarkdown(object parameter) => !string.IsNullOrWhiteSpace(MarkdownContent);
 
-        public void SaveMarkdown(object parameter)
+        public bool SaveAsMarkdown(object parameter)
         {
             var dialog = new SaveFileDialog();
             dialog.AddExtension = true;
@@ -102,10 +132,22 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                using (var sw = new StreamWriter(dialog.FileName))
+                MarkdownFile = dialog.FileName;
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SaveMarkdown(object parameter)
+        {
+            if (!string.IsNullOrEmpty(_markdownFile) || SaveAsMarkdown(parameter))
+            {
+                using (var sw = new StreamWriter(_markdownFile))
                 {
                     sw.WriteLine(MarkdownContent);
                 }
+                Edited = false;
             }
         }
 
@@ -174,10 +216,12 @@ namespace Markdown_Markup
 
             if (result.Value)
             {
-                using (var sr = new StreamReader(dialog.FileName))
+                MarkdownFile = dialog.FileName;
+                using (var sr = new StreamReader(_markdownFile))
                 {
                     MarkdownContent = sr.ReadToEnd();
                 }
+                Edited = false;
             }
         }
 
