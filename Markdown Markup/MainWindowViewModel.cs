@@ -21,18 +21,19 @@ namespace Markdown_Markup
         private string _htmlRenderContent;
 
         private string _markdownFile;
-        private bool _edited;
+        private string _cssFile;
+        private bool _markdownEdited;
+        private bool _cssEdited;
 
         public MainWindowViewModel()
         {
             _markdown = new Markdown();
             SaveMarkdownCommand = new DelegateCommand(SaveMarkdown, CanSaveMarkdown) { Gesture = new KeyGesture(Key.S, ModifierKeys.Control) };
-            SaveAsMarkdownCommand = new DelegateCommand((object p) => SaveAsMarkdown(p), CanSaveMarkdown);
-            SaveCssCommand = new DelegateCommand(SaveCss, CanSaveCss);
+            SaveCssCommand = new DelegateCommand(SaveCss, CanSaveCss) { Gesture = new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Shift) };
             SaveGeneratedHtmlCommand = new DelegateCommand(SaveGeneratedHtml, CanSaveGeneratedHtml);
             SaveRenderedHtmlCommand = new DelegateCommand(SaveRenderedHtml, CanSaveRenderedHtml);
             OpenMarkdownCommand = new DelegateCommand(OpenMarkdown, CanOpenMarkdown) { Gesture = new KeyGesture(Key.O, ModifierKeys.Control) };
-            OpenCssCommand = new DelegateCommand(OpenCss, CanOpenCss);
+            OpenCssCommand = new DelegateCommand(OpenCss, CanOpenCss) { Gesture = new KeyGesture(Key.O, ModifierKeys.Control | ModifierKeys.Shift) };
         }
 
         public ICommand SaveMarkdownCommand { get; }
@@ -54,18 +55,41 @@ namespace Markdown_Markup
             }
         }
 
-        public bool Edited
+        public string CssFile
         {
-            get { return _edited; }
+            get { return _cssFile; }
             set
             {
-                _edited = value;
-                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Edited)));
+                _cssFile = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CssFile)));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CssTitle)));
+            }
+        }
+
+        public bool MarkdownEdited
+        {
+            get { return _markdownEdited; }
+            set
+            {
+                _markdownEdited = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(MarkdownEdited)));
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(Title)));
             }
         }
 
-        public string Title => "Markdown Markup" + (MarkdownFile?.Length > 0 ? " - " + MarkdownFile : "") + (Edited ? "*" : "");
+        public bool CssEdited
+        {
+            get { return _cssEdited; }
+            set
+            {
+                _cssEdited = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CssEdited)));
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(CssTitle)));
+            }
+        }
+
+        public string Title => "Markdown Markup" + (MarkdownFile?.Length > 0 ? " - " + MarkdownFile : "") + (MarkdownEdited ? "*" : "");
+        public string CssTitle => CssFile?.Length > 0 ? "(" + CssFile + (CssEdited ? "*" : "") + ")" : "";
 
         public string MarkdownContent
         {
@@ -73,7 +97,7 @@ namespace Markdown_Markup
             set
             {
                 _markdownContent = value;
-                Edited = true;
+                MarkdownEdited = true;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(MarkdownContent)));
                 UpdateHtml();
             }
@@ -85,6 +109,7 @@ namespace Markdown_Markup
             set
             {
                 _cssContent = value;
+                CssEdited = true;
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(CssContent)));
                 UpdateHtml();
             }
@@ -100,7 +125,7 @@ namespace Markdown_Markup
 
             HtmlRenderContent = html;
         }
-        
+
         public string HtmlContent
         {
             get { return _htmlContent; }
@@ -110,7 +135,7 @@ namespace Markdown_Markup
                 OnPropertyChanged(new PropertyChangedEventArgs(nameof(HtmlContent)));
             }
         }
-        
+
         public string HtmlRenderContent
         {
             get { return _htmlRenderContent; }
@@ -123,50 +148,59 @@ namespace Markdown_Markup
 
         public bool CanSaveMarkdown(object parameter) => !string.IsNullOrWhiteSpace(MarkdownContent);
 
-        public bool SaveAsMarkdown(object parameter)
-        {
-            var dialog = new SaveFileDialog();
-            dialog.AddExtension = true;
-            dialog.Filter = "Markdown Files|*.md|All Files|*.*";
-            var result = dialog.ShowDialog();
-
-            if (result.Value)
-            {
-                MarkdownFile = dialog.FileName;
-                return true;
-            }
-
-            return false;
-        }
-
         public void SaveMarkdown(object parameter)
         {
-            if (!string.IsNullOrEmpty(_markdownFile) || SaveAsMarkdown(parameter))
+            if (parameter as string == "SaveAs" || string.IsNullOrEmpty(MarkdownFile))
             {
-                using (var sw = new StreamWriter(_markdownFile))
+                var dialog = new SaveFileDialog();
+                dialog.AddExtension = true;
+                dialog.Filter = "Markdown Files|*.md|All Files|*.*";
+                var result = dialog.ShowDialog();
+
+                if (result.Value)
                 {
-                    sw.WriteLine(MarkdownContent);
+                    MarkdownFile = dialog.FileName;
                 }
-                Edited = false;
+                else
+                {
+                    return;
+                }
             }
+
+            using (var sw = new StreamWriter(MarkdownFile))
+            {
+                sw.Write(MarkdownContent);
+            }
+            MarkdownEdited = false;
         }
 
         public bool CanSaveCss(object parameter) => !string.IsNullOrWhiteSpace(CssContent);
 
         public void SaveCss(object parameter)
         {
-            var dialog = new SaveFileDialog();
-            dialog.AddExtension = true;
-            dialog.Filter = "CSS Files|*.css|All Files|*.*";
-            var result = dialog.ShowDialog();
-
-            if (result.Value)
+            if (parameter as string == "SaveAs" || string.IsNullOrEmpty(CssFile))
             {
-                using (var sw = new StreamWriter(dialog.FileName))
+                var dialog = new SaveFileDialog();
+                dialog.AddExtension = true;
+                dialog.Filter = "CSS Files|*.css|All Files|*.*";
+                dialog.FileName = CssFile;
+                var result = dialog.ShowDialog();
+
+                if (result.Value)
                 {
-                    sw.WriteLine(CssContent);
+                    CssFile = dialog.FileName;
+                }
+                else
+                {
+                    return;
                 }
             }
+
+            using (var sw = new StreamWriter(CssFile))
+            {
+                sw.Write(CssContent);
+            }
+            CssEdited = false;
         }
 
         public bool CanSaveGeneratedHtml(object parameter) => !string.IsNullOrWhiteSpace(HtmlContent);
@@ -221,7 +255,7 @@ namespace Markdown_Markup
                 {
                     MarkdownContent = sr.ReadToEnd();
                 }
-                Edited = false;
+                MarkdownEdited = false;
             }
         }
 
@@ -232,14 +266,17 @@ namespace Markdown_Markup
             var dialog = new OpenFileDialog();
             dialog.AddExtension = true;
             dialog.Filter = "CSS Files|*.css|All Files|*.*";
+            dialog.FileName = CssFile;
             var result = dialog.ShowDialog();
 
             if (result.Value)
             {
-                using (var sr = new StreamReader(dialog.FileName))
+                CssFile = dialog.FileName;
+                using (var sr = new StreamReader(CssFile))
                 {
                     CssContent = sr.ReadToEnd();
                 }
+                CssEdited = false;
             }
         }
 

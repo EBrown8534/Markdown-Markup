@@ -10,6 +10,8 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding SaveMarkdownCommand}" Key="{Binding SaveMarkdownCommand.Gesture.Key}" Modifiers="{Binding SaveMarkdownCommand.Gesture.Modifiers}" />
         <KeyBinding Command="{Binding OpenMarkdownCommand}" Key="{Binding OpenMarkdownCommand.Gesture.Key}" Modifiers="{Binding OpenMarkdownCommand.Gesture.Modifiers}" />
+        <KeyBinding Command="{Binding SaveCssCommand}" Key="{Binding SaveCssCommand.Gesture.Key}" Modifiers="{Binding SaveCssCommand.Gesture.Modifiers}" />
+        <KeyBinding Command="{Binding OpenCssCommand}" Key="{Binding OpenCssCommand.Gesture.Key}" Modifiers="{Binding OpenCssCommand.Gesture.Modifiers}" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
@@ -27,16 +29,17 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open">
                         <MenuItem Header="_Markdown" Command="{Binding OpenMarkdownCommand}" InputGestureText="{Binding OpenMarkdownCommand.GestureText}"/>
-                        <MenuItem Header="_CSS" Command="{Binding OpenCssCommand}"/>
+                        <MenuItem Header="_CSS" Command="{Binding OpenCssCommand}" InputGestureText="{Binding OpenCssCommand.GestureText}"/>
                     </MenuItem>
                     <MenuItem Header="_Save">
                         <MenuItem Header="_Markdown" Command="{Binding SaveMarkdownCommand}" InputGestureText="{Binding SaveMarkdownCommand.GestureText}"/>
-                        <MenuItem Header="_CSS" Command="{Binding SaveCssCommand}"/>
+                        <MenuItem Header="_CSS" Command="{Binding SaveCssCommand}" InputGestureText="{Binding SaveCssCommand.GestureText}"/>
                         <MenuItem Header="_Generated HTML" Command="{Binding SaveGeneratedHtmlCommand}"/>
                         <MenuItem Header="_Rendered HTML" Command="{Binding SaveRenderedHtmlCommand}"/>
                     </MenuItem>
                     <MenuItem Header="Save _As">
-                        <MenuItem Header="_Markdown" Command="{Binding SaveAsMarkdownCommand}"/>
+                        <MenuItem Header="_Markdown" Command="{Binding SaveMarkdownCommand}" CommandParameter="SaveAs"/>
+                        <MenuItem Header="_CSS" Command="{Binding SaveCssCommand}" CommandParameter="SaveAs"/>
                     </MenuItem>
                 </MenuItem>
             </Menu>
@@ -61,7 +64,10 @@
         <TextBox Margin="5,45,5,0" TextWrapping="Wrap" Grid.Column="1" Text="{Binding CssContent, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
         <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="1" Grid.Row="1" Margin="5,31,5,29" Grid.ColumnSpan="2" Grid.RowSpan="2" Navigating="renderPreviewBrowser_Navigating" />
         <Label Content="Markdown Content:" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
-        <Label Content="Additional CSS:" Grid.Column="1" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top" Orientation="Horizontal">
+            <Label Content="Additional CSS"/>
+            <Label Content="{Binding CssTitle}"/>
+        </StackPanel>
         <Label Content="HTML Preview:" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
