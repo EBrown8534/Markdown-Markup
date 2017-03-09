@@ -183,7 +183,6 @@ namespace Markdown_Markup
                 var dialog = new SaveFileDialog();
                 dialog.AddExtension = true;
                 dialog.Filter = "CSS Files|*.css|All Files|*.*";
-                dialog.FileName = CssFile;
                 var result = dialog.ShowDialog();
 
                 if (result.Value)
