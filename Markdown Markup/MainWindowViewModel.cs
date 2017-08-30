@@ -211,7 +211,19 @@ namespace Markdown_Markup
 
         public bool Save()
         {
-            return SaveMarkdown(null) & SaveCss(null);
+            var result = true;
+
+            if (MarkdownEdited)
+            {
+                result = result & SaveMarkdown(null);
+            }
+
+            if (CssEdited)
+            {
+                result = result & SaveCss(null);
+            }
+
+            return result;
         }
 
         public bool CanSaveCss(object parameter) => !string.IsNullOrWhiteSpace(CssContent);
