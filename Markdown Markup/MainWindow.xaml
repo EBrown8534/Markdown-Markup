@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Markdown_Markup"
         mc:Ignorable="d"
         Title="{Binding Title}" Height="539" Width="749"
-        d:DataContext="{d:DesignInstance local:MainWindowViewModel}">
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}"
+        Closing="Window_Closing">
     <Window.InputBindings>
         <KeyBinding Command="{Binding SaveMarkdownCommand}" Key="{Binding SaveMarkdownCommand.Gesture.Key}" Modifiers="{Binding SaveMarkdownCommand.Gesture.Modifiers}" />
         <KeyBinding Command="{Binding OpenMarkdownCommand}" Key="{Binding OpenMarkdownCommand.Gesture.Key}" Modifiers="{Binding OpenMarkdownCommand.Gesture.Modifiers}" />
@@ -62,7 +63,7 @@
             </TabItem>
         </TabControl>
         <TextBox Margin="5,45,5,0" TextWrapping="Wrap" Grid.Column="1" Text="{Binding CssContent, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Visible"/>
-        <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="1" Grid.Row="1" Margin="5,31,5,29" Grid.ColumnSpan="2" Grid.RowSpan="2" Navigating="renderPreviewBrowser_Navigating" />
+        <WebBrowser local:BrowserBehavior.Html="{Binding HtmlRenderContent}" Grid.Column="1" Grid.Row="1" Margin="5,31,5,29" Grid.ColumnSpan="2" Grid.RowSpan="2" Navigating="renderPreviewBrowser_Navigating" Navigated="renderPreviewBrowser_Navigated" />
         <Label Content="Markdown Content:" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top"/>
         <StackPanel Grid.Column="1" HorizontalAlignment="Left" Margin="5,19,0,0" VerticalAlignment="Top" Orientation="Horizontal">
             <Label Content="Additional CSS"/>
